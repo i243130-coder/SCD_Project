@@ -9,6 +9,8 @@ COPY services/gateway/requirements.txt .
 RUN pip install --prefix=/install -r requirements.txt /libs/common
 
 FROM python:3.12.7-slim-bookworm
+# Patch OS packages so the Trivy CRITICAL gate passes (base image packages go stale).
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 RUN useradd -m -u 10001 app
 WORKDIR /app
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
