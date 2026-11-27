@@ -73,7 +73,7 @@ jobs:
         run: |
           dir=services/${{ matrix.module }}; [ -d "$dir" ] || dir=jobs/${{ matrix.module }}
           docker build -f "$dir/Dockerfile" -t "${{ matrix.module }}:${{ github.sha }}" .
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.36.0
         with: { image-ref: "${{ matrix.module }}:${{ github.sha }}", exit-code: "1", severity: CRITICAL, ignore-unfixed: true }
 
   manifests:

@@ -14,3 +14,5 @@ email-validator==2.4.0
 dnspython==2.9.2
 asyncpg==0.30.0
 psycopg[binary]==3.2.3
+email-validator==2.4.0
+greenlet==3.5.6
