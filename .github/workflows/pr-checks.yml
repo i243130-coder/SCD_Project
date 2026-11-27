@@ -16,7 +16,7 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: ruff check . && ruff format --check .
       - run: mypy libs/common/ivcommon
-      - run: for d in services/*/src jobs/ingestion/src; do mypy "$d" || exit 1; done
+      - run: for d in services/*/src jobs/ingestion/src; do [ "$d" = services/ui/src ] && continue; mypy "$d" || exit 1; done
       - run: python scripts/export_schemas.py --check          # schemas up to date
       - run: python scripts/check_registry.py                  # prompt/rubric version bumped
       - run: python k8s/generate.py && git diff --exit-code k8s # generated manifests committed

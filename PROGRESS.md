@@ -57,7 +57,7 @@
 - [ ] Label the tuning set (≥ 40 ideas, both members): `python eval/labelled/label_helper.py --member "<name>"`
 - [ ] Deliberate merge-conflict PR (§23), real PR reviews, screenshots (`docs/screenshots/captions.md`)
 - [ ] AI-usage log "What you changed / Why" columns; contribution table + signatures (must match `git shortlog -sn`)
-- [ ] Note: this folder is currently inside another git repo (`~/Desktop`). Run `git init` inside `idea-validator/` (or move it) before pushing.
+- [x] Repo layout: project lives at the root of `i243130-coder/SCD_Project`; the assignment brief is in `brief/`. TODO(human): protect `main` (require PR + the pr-checks jobs).
 
 ## Requirements status (§2)
 Legend: [x] implemented + tested in code · [~] implemented, needs a real run / human step · [ ] not done
