@@ -1,0 +1,12 @@
+.git
+.venv
+**/__pycache__
+**/tests
+**/node_modules
+data/
+.env
+.env.*
+*.gguf
+*.safetensors
+eval/results
+docs/

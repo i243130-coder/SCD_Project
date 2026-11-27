@@ -1,0 +1,36 @@
+{
+  "properties": {
+    "perturbation": {
+      "title": "Perturbation",
+      "type": "string"
+    },
+    "score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Score"
+    },
+    "verdict": {
+      "enum": [
+        "GO",
+        "PIVOT",
+        "NO-GO",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    }
+  },
+  "required": [
+    "perturbation",
+    "verdict",
+    "score"
+  ],
+  "title": "Flip",
+  "type": "object"
+}

@@ -1,0 +1,320 @@
+{
+  "$defs": {
+    "ChallengeAdjustment": {
+      "properties": {
+        "accepted_objections": {
+          "minimum": 0,
+          "title": "Accepted Objections",
+          "type": "integer"
+        },
+        "dimension": {
+          "enum": [
+            "demand_pain",
+            "competition",
+            "differentiation",
+            "feasibility",
+            "risk",
+            "learning"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dimension",
+        "accepted_objections"
+      ],
+      "title": "ChallengeAdjustment",
+      "type": "object"
+    },
+    "DimensionScore": {
+      "properties": {
+        "abstained": {
+          "default": false,
+          "title": "Abstained",
+          "type": "boolean"
+        },
+        "cache_hit": {
+          "default": false,
+          "title": "Cache Hit",
+          "type": "boolean"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "dimension": {
+          "enum": [
+            "demand_pain",
+            "competition",
+            "differentiation",
+            "feasibility",
+            "risk",
+            "learning"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "extra": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Extra",
+          "type": "object"
+        },
+        "features": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "default": {},
+          "title": "Features",
+          "type": "object"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "rubric_version": {
+          "title": "Rubric Version",
+          "type": "string"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        }
+      },
+      "required": [
+        "dimension",
+        "confidence",
+        "evidence_ids",
+        "reason",
+        "rubric_version",
+        "model"
+      ],
+      "title": "DimensionScore",
+      "type": "object"
+    },
+    "StudentProfile": {
+      "properties": {
+        "compute": {
+          "enum": [
+            "laptop",
+            "free_gpu",
+            "paid"
+          ],
+          "title": "Compute",
+          "type": "string"
+        },
+        "goal": {
+          "enum": [
+            "startup",
+            "portfolio",
+            "course_project"
+          ],
+          "title": "Goal",
+          "type": "string"
+        },
+        "hours_per_week": {
+          "maximum": 80,
+          "minimum": 0,
+          "title": "Hours Per Week",
+          "type": "number"
+        },
+        "interests": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Interests",
+          "type": "array"
+        },
+        "profile_version": {
+          "default": 1,
+          "title": "Profile Version",
+          "type": "integer"
+        },
+        "skills": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Skills",
+          "type": "array"
+        },
+        "team_size": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Team Size",
+          "type": "integer"
+        },
+        "user_id": {
+          "title": "User Id",
+          "type": "string"
+        },
+        "weeks_available": {
+          "maximum": 52,
+          "minimum": 1,
+          "title": "Weeks Available",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "user_id",
+        "skills",
+        "hours_per_week",
+        "weeks_available",
+        "team_size",
+        "compute",
+        "goal"
+      ],
+      "title": "StudentProfile",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "challenge_adjustments": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ChallengeAdjustment"
+      },
+      "title": "Challenge Adjustments",
+      "type": "array"
+    },
+    "config_override": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Config Override"
+    },
+    "idea_id": {
+      "default": "adhoc",
+      "title": "Idea Id",
+      "type": "string"
+    },
+    "include_what_if": {
+      "default": true,
+      "title": "Include What If",
+      "type": "boolean"
+    },
+    "n_platforms": {
+      "minimum": 0,
+      "title": "N Platforms",
+      "type": "integer"
+    },
+    "n_sources": {
+      "minimum": 0,
+      "title": "N Sources",
+      "type": "integer"
+    },
+    "profile": {
+      "$ref": "#/$defs/StudentProfile"
+    },
+    "profile_overrides": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Profile Overrides",
+      "type": "object"
+    },
+    "rubric_set_version": {
+      "default": "r1",
+      "title": "Rubric Set Version",
+      "type": "string"
+    },
+    "run_id": {
+      "default": "adhoc",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "score_overrides": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "default": {},
+      "propertyNames": {
+        "enum": [
+          "demand_pain",
+          "competition",
+          "differentiation",
+          "feasibility",
+          "risk",
+          "learning"
+        ]
+      },
+      "title": "Score Overrides",
+      "type": "object"
+    },
+    "scores": {
+      "items": {
+        "$ref": "#/$defs/DimensionScore"
+      },
+      "title": "Scores",
+      "type": "array"
+    },
+    "version": {
+      "default": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "weight_overrides": {
+      "anyOf": [
+        {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "propertyNames": {
+            "enum": [
+              "demand_pain",
+              "competition",
+              "differentiation",
+              "feasibility",
+              "risk",
+              "learning"
+            ]
+          },
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Weight Overrides"
+    }
+  },
+  "required": [
+    "scores",
+    "profile",
+    "n_sources",
+    "n_platforms"
+  ],
+  "title": "WhatIfRequest",
+  "type": "object"
+}

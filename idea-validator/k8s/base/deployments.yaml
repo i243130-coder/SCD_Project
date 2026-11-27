@@ -1,0 +1,1140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: idea-validator
+  labels: &id001
+    app: gateway
+    tier: edge
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: gateway
+        image: registry/gateway:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: idea-validator
+spec:
+  selector:
+    app: gateway
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: profile
+  namespace: idea-validator
+  labels: &id001
+    app: profile
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: profile
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: profile
+        image: registry/profile:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: profile
+  namespace: idea-validator
+spec:
+  selector:
+    app: profile
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator
+  namespace: idea-validator
+  labels: &id001
+    app: orchestrator
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: orchestrator
+        image: registry/orchestrator:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: budgets
+          mountPath: /config/budgets.yaml
+          subPath: budgets.yaml
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: budgets
+        configMap:
+          name: budgets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestrator
+  namespace: idea-validator
+spec:
+  selector:
+    app: orchestrator
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tools
+  namespace: idea-validator
+  labels: &id001
+    app: tools
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: tools
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: tools
+        image: registry/tools:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        - configMapRef:
+            name: tools-allowlist
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tools
+  namespace: idea-validator
+spec:
+  selector:
+    app: tools
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kb
+  namespace: idea-validator
+  labels: &id001
+    app: kb
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: kb
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: kb
+        image: registry/kb:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: snapshot
+          mountPath: /data/snapshot
+          readOnly: true
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: snapshot
+        persistentVolumeClaim:
+          claimName: card-snapshot
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kb
+  namespace: idea-validator
+spec:
+  selector:
+    app: kb
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analyst
+  namespace: idea-validator
+  labels: &id001
+    app: analyst
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: analyst
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: analyst
+        image: registry/analyst:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: snapshot
+          mountPath: /data/snapshot
+          readOnly: true
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: snapshot
+        persistentVolumeClaim:
+          claimName: card-snapshot
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: analyst
+  namespace: idea-validator
+spec:
+  selector:
+    app: analyst
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ideation
+  namespace: idea-validator
+  labels: &id001
+    app: ideation
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ideation
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: ideation
+        image: registry/ideation:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ideation
+  namespace: idea-validator
+spec:
+  selector:
+    app: ideation
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: validators
+  namespace: idea-validator
+  labels: &id001
+    app: validators
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: validators
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: validators
+        image: registry/validators:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: validators
+  namespace: idea-validator
+spec:
+  selector:
+    app: validators
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scorer
+  namespace: idea-validator
+  labels: &id001
+    app: scorer
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: scorer
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: scorer
+        image: registry/scorer:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: '1'
+            memory: 2Gi
+          limits:
+            cpu: '2'
+            memory: 3Gi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: models
+          mountPath: /models
+          readOnly: true
+        env:
+        - name: SCORER_BACKEND
+          value: rule
+        - name: MODEL_PATH
+          value: /models/scorer.gguf
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: models
+        persistentVolumeClaim:
+          claimName: scorer-models
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scorer
+  namespace: idea-validator
+spec:
+  selector:
+    app: scorer
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verdict
+  namespace: idea-validator
+  labels: &id001
+    app: verdict
+    tier: internal
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: verdict
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: verdict
+        image: registry/verdict:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: verdict-config
+          mountPath: /config/verdict.yaml
+          subPath: verdict.yaml
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: verdict-config
+        configMap:
+          name: verdict-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: verdict
+  namespace: idea-validator
+spec:
+  selector:
+    app: verdict
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: critic
+  namespace: idea-validator
+  labels: &id001
+    app: critic
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: critic
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: critic
+        image: registry/critic:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: critic
+  namespace: idea-validator
+spec:
+  selector:
+    app: critic
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentops
+  namespace: idea-validator
+  labels: &id001
+    app: agentops
+    tier: internal
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: agentops
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8000'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: agentops
+        image: registry/agentops:set-by-deploy
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: traces
+          mountPath: /traces
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: traces
+        persistentVolumeClaim:
+          claimName: agentops-traces
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentops
+  namespace: idea-validator
+spec:
+  selector:
+    app: agentops
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: idea-validator
+  labels: &id001
+    app: ui
+    tier: ui
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels: *id001
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: ui
+        image: registry/ui:set-by-deploy
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 20
+          initialDelaySeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 101
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: nginx-conf
+          mountPath: /usr/share/nginx/html/runtime
+        env:
+        - name: API_BASE_URL
+          value: /api
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: nginx-conf
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui
+  namespace: idea-validator
+spec:
+  selector:
+    app: ui
+  ports:
+  - port: 80
+    targetPort: 8080

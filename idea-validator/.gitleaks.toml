@@ -1,0 +1,6 @@
+title = "idea-validator gitleaks config"
+[extend]
+useDefault = true
+[allowlist]
+description = "example files contain names only"
+paths = ['''\.env\.example''', '''k8s/base/secrets\.example\.yaml''']

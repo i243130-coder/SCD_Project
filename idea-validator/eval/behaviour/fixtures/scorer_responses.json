@@ -1,0 +1,4 @@
+{
+  "invalid_then_invalid": ["Sure! The score is 4/5 because...", "{\"score\": 4, \"confidence\": "],
+  "hosted_valid": "{\"score\": 4.0, \"confidence\": 0.7, \"evidence_ids\": [\"card_0000#c0\"], \"reason\": \"recorded hosted response\"}"
+}

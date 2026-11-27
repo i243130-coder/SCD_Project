@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "payload": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Payload",
+      "type": "object"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "state",
+        "agent_start",
+        "agent_end",
+        "tool_call",
+        "spend",
+        "question",
+        "approval_required",
+        "result",
+        "error"
+      ],
+      "title": "Type",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "run_id",
+    "ts"
+  ],
+  "title": "RunEvent",
+  "type": "object"
+}

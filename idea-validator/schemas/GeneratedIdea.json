@@ -1,0 +1,55 @@
+{
+  "properties": {
+    "customer": {
+      "title": "Customer",
+      "type": "string"
+    },
+    "gap_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Gap Evidence Ids",
+      "type": "array"
+    },
+    "niche_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Niche Id"
+    },
+    "one_liner": {
+      "title": "One Liner",
+      "type": "string"
+    },
+    "problem": {
+      "title": "Problem",
+      "type": "string"
+    },
+    "source": {
+      "const": "generated",
+      "default": "generated",
+      "title": "Source",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "one_liner",
+    "problem",
+    "customer",
+    "gap_evidence_ids"
+  ],
+  "title": "GeneratedIdea",
+  "type": "object"
+}

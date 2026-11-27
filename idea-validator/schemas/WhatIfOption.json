@@ -1,0 +1,63 @@
+{
+  "properties": {
+    "change": {
+      "title": "Change",
+      "type": "string"
+    },
+    "delta": {
+      "default": 0,
+      "title": "Delta",
+      "type": "number"
+    },
+    "dimension": {
+      "anyOf": [
+        {
+          "enum": [
+            "demand_pain",
+            "competition",
+            "differentiation",
+            "feasibility",
+            "risk",
+            "learning"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Dimension"
+    },
+    "new_score": {
+      "title": "New Score",
+      "type": "number"
+    },
+    "new_stability": {
+      "enum": [
+        "STABLE",
+        "BORDERLINE"
+      ],
+      "title": "New Stability",
+      "type": "string"
+    },
+    "new_verdict": {
+      "enum": [
+        "GO",
+        "PIVOT",
+        "NO-GO",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "title": "New Verdict",
+      "type": "string"
+    }
+  },
+  "required": [
+    "change",
+    "new_score",
+    "new_verdict",
+    "new_stability"
+  ],
+  "title": "WhatIfOption",
+  "type": "object"
+}

@@ -1,0 +1,108 @@
+{
+  "properties": {
+    "customer": {
+      "default": "",
+      "title": "Customer",
+      "type": "string"
+    },
+    "fetched_at": {
+      "format": "date-time",
+      "title": "Fetched At",
+      "type": "string"
+    },
+    "funding_usd": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Funding Usd"
+    },
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "niche_tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Niche Tags",
+      "type": "array"
+    },
+    "problem": {
+      "default": "",
+      "title": "Problem",
+      "type": "string"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published At"
+    },
+    "source": {
+      "enum": [
+        "hackernews",
+        "github",
+        "producthunt",
+        "yc",
+        "reddit"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "stage": {
+      "default": "unknown",
+      "enum": [
+        "launched",
+        "seed",
+        "series_a",
+        "growth",
+        "acquired",
+        "dead",
+        "unknown"
+      ],
+      "title": "Stage",
+      "type": "string"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    },
+    "url": {
+      "title": "Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "summary",
+    "source",
+    "url",
+    "fetched_at",
+    "text"
+  ],
+  "title": "IdeaCard",
+  "type": "object"
+}

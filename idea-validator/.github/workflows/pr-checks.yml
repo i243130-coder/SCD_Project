@@ -1,0 +1,96 @@
+name: pr-checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency: { group: "pr-${{ github.event.number || github.sha }}", cancel-in-progress: true }
+permissions: { contents: read }
+
+jobs:
+  lint-type:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements-dev.txt }
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check . && ruff format --check .
+      - run: mypy libs/common/ivcommon
+      - run: for d in services/*/src jobs/ingestion/src; do mypy "$d" || exit 1; done
+      - run: python scripts/export_schemas.py --check          # schemas up to date
+      - run: python scripts/check_registry.py                  # prompt/rubric version bumped
+      - run: python k8s/generate.py && git diff --exit-code k8s # generated manifests committed
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16.4-alpine
+        env: { POSTGRES_PASSWORD: test }
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+      redis: { image: "redis:7.4.1-alpine", ports: ["6379:6379"] }
+    env: { TRACE_STDOUT: "0" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements-dev.txt }
+      - run: pip install -r requirements-dev.txt
+      - run: pytest services/verdict -q          # verdict engine (the full §9.5 list)
+      - run: ./scripts/test_all.sh               # every other module, one pytest per module
+      - run: pytest eval/behaviour -q            # recorded-response behaviour tests
+
+  ui-tests:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: services/ui } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: npm, cache-dependency-path: services/ui/package-lock.json }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test -- --run
+
+  retrieval-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip, cache-dependency-path: requirements-dev.txt }
+      - run: pip install -r requirements-dev.txt
+      - run: pytest eval/retrieval -q            # fails if below baseline - 0.02
+
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [gateway, ui, profile, orchestrator, scouts, tools, kb, analyst, ideation, validators, scorer, verdict, critic, agentops, ingestion, evaluation]
+    steps:
+      - uses: actions/checkout@v4
+      - name: build
+        run: |
+          dir=services/${{ matrix.module }}; [ -d "$dir" ] || dir=jobs/${{ matrix.module }}
+          docker build -f "$dir/Dockerfile" -t "${{ matrix.module }}:${{ github.sha }}" .
+      - uses: aquasecurity/trivy-action@0.28.0
+        with: { image-ref: "${{ matrix.module }}:${{ github.sha }}", exit-code: "1", severity: CRITICAL, ignore-unfixed: true }
+
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: kubeconform
+        run: |
+          curl -sL https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz | tar xz
+          kubectl kustomize k8s/overlays/test > rendered.yaml
+          ./kubeconform -strict -summary -ignore-missing-schemas rendered.yaml
+          ./kubeconform -strict -summary -ignore-missing-schemas k8s/base/jobs/
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }

@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: idea-validator
+resources:
+- namespace.yaml
+- configmaps.yaml
+- deployments.yaml
+- statefulsets.yaml
+- pvcs.yaml
+- cronjobs.yaml
+- ingress.yaml
+- hpa.yaml
+- networkpolicies/default-deny.yaml
+- networkpolicies/allow-dns.yaml
+- networkpolicies/allow-intra-namespace.yaml
+- networkpolicies/allow-ui-to-gateway.yaml
+- networkpolicies/allow-ingress-to-gateway.yaml
+- networkpolicies/allow-tools-internet.yaml
+- networkpolicies/allow-model-import.yaml
+- networkpolicies/allow-prometheus-scrape.yaml
+configMapGenerator:
+- name: verdict-config
+  files:
+  - verdict.yaml=files/verdict.yaml
+- name: budgets
+  files:
+  - budgets.yaml=files/budgets.yaml
+generatorOptions:
+  disableNameSuffixHash: true

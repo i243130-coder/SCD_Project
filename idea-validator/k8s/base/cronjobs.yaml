@@ -1,0 +1,360 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scout-hn
+  namespace: idea-validator
+spec:
+  schedule: 0 */6 * * *
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: scouts
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: scout
+            image: registry/scouts:set-by-deploy
+            args:
+            - python
+            - -m
+            - src.main
+            - --source
+            - hn
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: raw
+              mountPath: /data/raw
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: raw
+            persistentVolumeClaim:
+              claimName: scout-raw
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scout-github
+  namespace: idea-validator
+spec:
+  schedule: 30 1 * * *
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: scouts
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: scout
+            image: registry/scouts:set-by-deploy
+            args:
+            - python
+            - -m
+            - src.main
+            - --source
+            - github
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: raw
+              mountPath: /data/raw
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: raw
+            persistentVolumeClaim:
+              claimName: scout-raw
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scout-producthunt
+  namespace: idea-validator
+spec:
+  schedule: 0 2 * * *
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: scouts
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: scout
+            image: registry/scouts:set-by-deploy
+            args:
+            - python
+            - -m
+            - src.main
+            - --source
+            - producthunt
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: raw
+              mountPath: /data/raw
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: raw
+            persistentVolumeClaim:
+              claimName: scout-raw
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scout-yc
+  namespace: idea-validator
+spec:
+  schedule: 0 3 * * 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: scouts
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: scout
+            image: registry/scouts:set-by-deploy
+            args:
+            - python
+            - -m
+            - src.main
+            - --source
+            - yc
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: raw
+              mountPath: /data/raw
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: raw
+            persistentVolumeClaim:
+              claimName: scout-raw
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ingestion
+  namespace: idea-validator
+spec:
+  schedule: 0 4 * * *
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: ingestion
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: ingestion
+            image: registry/ingestion:set-by-deploy
+            args:
+            - python
+            - -m
+            - src.ingest
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: raw
+              mountPath: /data/raw
+            - name: snapshot
+              mountPath: /data/snapshot
+          volumes:
+          - name: tmp
+            emptyDir: {}
+          - name: raw
+            persistentVolumeClaim:
+              claimName: scout-raw
+          - name: snapshot
+            persistentVolumeClaim:
+              claimName: card-snapshot
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: analyst-recompute
+  namespace: idea-validator
+spec:
+  schedule: 30 4 * * *
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: recompute
+            tier: internal
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: recompute
+            image: registry/evaluation:set-by-deploy
+            args:
+            - python
+            - -c
+            - import httpx,os;[httpx.post(os.environ[k]+p,timeout=60) for k,p in (('KB_URL','/reload'),('ANALYST_URL','/recompute'))]
+            envFrom:
+            - configMapRef:
+                name: service-urls
+            - configMapRef:
+                name: common-config
+            - secretRef:
+                name: app-secrets
+                optional: true
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: 10001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          volumes:
+          - name: tmp
+            emptyDir: {}

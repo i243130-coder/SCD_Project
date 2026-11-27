@@ -1,0 +1,108 @@
+# LOCAL DEVELOPMENT ONLY. The deployment target is Kubernetes (k8s/). See README.
+x-svc: &svc
+  env_file: .env
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/health',timeout=3)"]
+    interval: 10s
+    timeout: 5s
+    retries: 10
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    environment:
+      POSTGRES_DB: ideas
+      POSTGRES_USER: ideas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U ideas"], interval: 5s, retries: 20}
+  redis:
+    image: redis:7.4.1-alpine
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, retries: 20}
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    volumes: [qdrantdata:/qdrant/storage]
+
+  profile:
+    <<: *svc
+    build: {context: ., dockerfile: services/profile/Dockerfile}
+    image: idea-validator/profile:dev
+    depends_on: {postgres: {condition: service_healthy}, redis: {condition: service_healthy}}
+  orchestrator:
+    <<: *svc
+    build: {context: ., dockerfile: services/orchestrator/Dockerfile}
+    image: idea-validator/orchestrator:dev
+    depends_on: {redis: {condition: service_healthy}, profile: {condition: service_healthy}}
+  tools:
+    <<: *svc
+    build: {context: ., dockerfile: services/tools/Dockerfile}
+    image: idea-validator/tools:dev
+    depends_on: {redis: {condition: service_healthy}}
+  kb:
+    <<: *svc
+    build: {context: ., dockerfile: services/kb/Dockerfile}
+    image: idea-validator/kb:dev
+    environment: {KB_SNAPSHOT: /data/snapshot/cards.jsonl.gz}
+    volumes: [./data:/data:ro]
+    depends_on: {redis: {condition: service_healthy}}
+  analyst:
+    <<: *svc
+    build: {context: ., dockerfile: services/analyst/Dockerfile}
+    image: idea-validator/analyst:dev
+    environment: {KB_SNAPSHOT: /data/snapshot/cards.jsonl.gz}
+    volumes: [./data:/data:ro]
+  ideation:
+    <<: *svc
+    build: {context: ., dockerfile: services/ideation/Dockerfile}
+    image: idea-validator/ideation:dev
+  validators:
+    <<: *svc
+    build: {context: ., dockerfile: services/validators/Dockerfile}
+    image: idea-validator/validators:dev
+  scorer:
+    <<: *svc
+    build: {context: ., dockerfile: services/scorer/Dockerfile}
+    image: idea-validator/scorer:dev
+  verdict:
+    <<: *svc
+    build: {context: ., dockerfile: services/verdict/Dockerfile}
+    image: idea-validator/verdict:dev
+  critic:
+    <<: *svc
+    build: {context: ., dockerfile: services/critic/Dockerfile}
+    image: idea-validator/critic:dev
+  agentops:
+    <<: *svc
+    build: {context: ., dockerfile: services/agentops/Dockerfile}
+    image: idea-validator/agentops:dev
+    environment: {TRACE_DIR: /traces, DRIFT_DIR: /traces/drift}
+    volumes: [traces:/traces]
+  scouts:
+    <<: *svc
+    build: {context: ., dockerfile: services/scouts/Dockerfile}
+    image: idea-validator/scouts:dev
+    volumes: [rawdata:/data/raw]
+  gateway:
+    <<: *svc
+    build: {context: ., dockerfile: services/gateway/Dockerfile}
+    image: idea-validator/gateway:dev
+    ports: ["8000:8000"]
+    depends_on:
+      redis: {condition: service_healthy}
+      profile: {condition: service_healthy}
+      orchestrator: {condition: service_healthy}
+      critic: {condition: service_healthy}
+  ui:
+    build: {context: ., dockerfile: services/ui/Dockerfile}
+    image: idea-validator/ui:dev
+    environment: {API_BASE_URL: "http://localhost:8000"}
+    ports: ["8080:8080"]
+
+  ingestion:
+    profiles: [jobs]
+    build: {context: ., dockerfile: jobs/ingestion/Dockerfile}
+    env_file: .env
+    volumes: [rawdata:/data/raw, ./data/snapshot:/data/snapshot]
+
+volumes: {pgdata: {}, qdrantdata: {}, rawdata: {}, traces: {}}

@@ -1,0 +1,46 @@
+{
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "keywords": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Keywords",
+      "type": "array"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "size": {
+      "title": "Size",
+      "type": "integer"
+    },
+    "status": {
+      "enum": [
+        "rising",
+        "flat",
+        "saturated"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "trend_slope": {
+      "title": "Trend Slope",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "size",
+    "trend_slope",
+    "status"
+  ],
+  "title": "Niche",
+  "type": "object"
+}

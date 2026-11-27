@@ -1,0 +1,39 @@
+{
+  "config": "hybrid_rerank",
+  "fixture": "eval/retrieval/fixtures/cards.jsonl",
+  "recall@5": 0.9733,
+  "recall@10": 0.9867,
+  "mrr": 0.98,
+  "ndcg@10": 0.9636,
+  "n_queries": 25,
+  "all": {
+    "vector": {
+      "recall@5": 0.9467,
+      "recall@10": 0.9867,
+      "mrr": 0.98,
+      "ndcg@10": 0.9593,
+      "n_queries": 25
+    },
+    "keyword": {
+      "recall@5": 0.9867,
+      "recall@10": 0.9867,
+      "mrr": 1.0,
+      "ndcg@10": 0.9804,
+      "n_queries": 25
+    },
+    "hybrid": {
+      "recall@5": 0.9867,
+      "recall@10": 0.9867,
+      "mrr": 1.0,
+      "ndcg@10": 0.9793,
+      "n_queries": 25
+    },
+    "hybrid_rerank": {
+      "recall@5": 0.9733,
+      "recall@10": 0.9867,
+      "mrr": 0.98,
+      "ndcg@10": 0.9636,
+      "n_queries": 25
+    }
+  }
+}

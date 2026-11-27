@@ -1,0 +1,35 @@
+{
+  "properties": {
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "similarity": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Similarity"
+    },
+    "supported": {
+      "title": "Supported",
+      "type": "boolean"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text",
+    "supported",
+    "reason"
+  ],
+  "title": "ClaimCheck",
+  "type": "object"
+}

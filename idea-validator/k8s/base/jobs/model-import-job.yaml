@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-import
+  namespace: idea-validator
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: model-import
+        tier: internal
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: model-import
+        image: registry/evaluation:set-by-deploy
+        args:
+        - python
+        - -c
+        - import os,urllib.request;urllib.request.urlretrieve(os.environ['MODEL_URL'],'/models/scorer.gguf')
+        envFrom:
+        - configMapRef:
+            name: service-urls
+        - configMapRef:
+            name: common-config
+        - secretRef:
+            name: app-secrets
+            optional: true
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: models
+          mountPath: /models
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: models
+        persistentVolumeClaim:
+          claimName: scorer-models

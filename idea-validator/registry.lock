@@ -1,0 +1,70 @@
+{
+  "files": {
+    "prompts/critic_entailment@v1.md": {
+      "name": "critic_entailment",
+      "version": "1",
+      "sha256": "d824411fbb8311cd7af681740e7f00356763e0fd0edb7cdcf2f72e5cb759f644"
+    },
+    "prompts/extract_fields@v1.md": {
+      "name": "extract_fields",
+      "version": "1",
+      "sha256": "ca9d7d6724c5bce2e4a513b66e17def7307875f9ec78570b568d903fcc69b1c0"
+    },
+    "prompts/gap_analyst@v1.md": {
+      "name": "gap_analyst",
+      "version": "1",
+      "sha256": "8111a0a4799d16343353368e3ee022e2573536d8d45e4e3f9fa62b284249c422"
+    },
+    "prompts/ideator@v1.md": {
+      "name": "ideator",
+      "version": "1",
+      "sha256": "d7adb39198cae2f9a1fc74e55edecf1dd8eb456cffa6b39a36dbd81d04df6642"
+    },
+    "prompts/niche_namer@v1.md": {
+      "name": "niche_namer",
+      "version": "1",
+      "sha256": "878ba91cfea0e35f408eeb853962d2d175df7a4de807e0d401c8a193ef917f1b"
+    },
+    "prompts/skeptic@v1.md": {
+      "name": "skeptic",
+      "version": "1",
+      "sha256": "347856abacadce72210e43235f2f68eda170b77a2afb8ce82788451c3c95caee"
+    },
+    "prompts/suggest_change@v1.md": {
+      "name": "suggest_change",
+      "version": "1",
+      "sha256": "34c30d6105de1ebc33df71a4efee7ba1f6545cc519d690124fbd842d3e860139"
+    },
+    "rubrics/competition@v1.yaml": {
+      "name": "competition",
+      "version": "1",
+      "sha256": "156a21d46005ec90d7b03c8743758e0f31864576340ae58b6db676fc38b75477"
+    },
+    "rubrics/demand_pain@v1.yaml": {
+      "name": "demand_pain",
+      "version": "1",
+      "sha256": "e17f7c24d57d2eb091f4b475813c206cbf1a7f2daef941dcd0d41ab97d64bff2"
+    },
+    "rubrics/differentiation@v1.yaml": {
+      "name": "differentiation",
+      "version": "1",
+      "sha256": "d1d84300aa9ba6fc38ca0b53ffbd3459b6c3b2a5b3cf2be63f99ffedd36c64d3"
+    },
+    "rubrics/feasibility@v1.yaml": {
+      "name": "feasibility",
+      "version": "1",
+      "sha256": "4d8e011d02b857ac74763d163bb7adf8207d9f06c94f323904b54314e1a87666"
+    },
+    "rubrics/learning@v1.yaml": {
+      "name": "learning",
+      "version": "1",
+      "sha256": "e94e3b946d29af10ac7c819ff5e01670a9dcba688d85dd4318cce0f09af95a63"
+    },
+    "rubrics/risk@v1.yaml": {
+      "name": "risk",
+      "version": "1",
+      "sha256": "7e472d84566064b4512dad7eca54a92ba74d782c24a84842d0b6f7411f2ca0bb"
+    }
+  },
+  "rubric_set": "re3f70375"
+}

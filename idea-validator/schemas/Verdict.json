@@ -1,0 +1,332 @@
+{
+  "$defs": {
+    "DimensionScore": {
+      "properties": {
+        "abstained": {
+          "default": false,
+          "title": "Abstained",
+          "type": "boolean"
+        },
+        "cache_hit": {
+          "default": false,
+          "title": "Cache Hit",
+          "type": "boolean"
+        },
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "dimension": {
+          "enum": [
+            "demand_pain",
+            "competition",
+            "differentiation",
+            "feasibility",
+            "risk",
+            "learning"
+          ],
+          "title": "Dimension",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "extra": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Extra",
+          "type": "object"
+        },
+        "features": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "default": {},
+          "title": "Features",
+          "type": "object"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "rubric_version": {
+          "title": "Rubric Version",
+          "type": "string"
+        },
+        "score": {
+          "anyOf": [
+            {
+              "maximum": 5,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Score"
+        }
+      },
+      "required": [
+        "dimension",
+        "confidence",
+        "evidence_ids",
+        "reason",
+        "rubric_version",
+        "model"
+      ],
+      "title": "DimensionScore",
+      "type": "object"
+    },
+    "WhatIfOption": {
+      "properties": {
+        "change": {
+          "title": "Change",
+          "type": "string"
+        },
+        "delta": {
+          "default": 0,
+          "title": "Delta",
+          "type": "number"
+        },
+        "dimension": {
+          "anyOf": [
+            {
+              "enum": [
+                "demand_pain",
+                "competition",
+                "differentiation",
+                "feasibility",
+                "risk",
+                "learning"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dimension"
+        },
+        "new_score": {
+          "title": "New Score",
+          "type": "number"
+        },
+        "new_stability": {
+          "enum": [
+            "STABLE",
+            "BORDERLINE"
+          ],
+          "title": "New Stability",
+          "type": "string"
+        },
+        "new_verdict": {
+          "enum": [
+            "GO",
+            "PIVOT",
+            "NO-GO",
+            "INSUFFICIENT_EVIDENCE"
+          ],
+          "title": "New Verdict",
+          "type": "string"
+        }
+      },
+      "required": [
+        "change",
+        "new_score",
+        "new_verdict",
+        "new_stability"
+      ],
+      "title": "WhatIfOption",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "cache_hit": {
+      "default": false,
+      "title": "Cache Hit",
+      "type": "boolean"
+    },
+    "confidence": {
+      "title": "Confidence",
+      "type": "number"
+    },
+    "gate_details": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "default": {},
+      "title": "Gate Details",
+      "type": "object"
+    },
+    "gates": {
+      "additionalProperties": {
+        "enum": [
+          "pass",
+          "fail",
+          "not_run"
+        ],
+        "type": "string"
+      },
+      "propertyNames": {
+        "enum": [
+          "evidence",
+          "feasibility",
+          "risk",
+          "duplicate"
+        ]
+      },
+      "title": "Gates",
+      "type": "object"
+    },
+    "idea_id": {
+      "title": "Idea Id",
+      "type": "string"
+    },
+    "missing": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing",
+      "type": "array"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Score"
+    },
+    "scores": {
+      "items": {
+        "$ref": "#/$defs/DimensionScore"
+      },
+      "title": "Scores",
+      "type": "array"
+    },
+    "sensitivity": {
+      "additionalProperties": true,
+      "title": "Sensitivity",
+      "type": "object"
+    },
+    "stability": {
+      "enum": [
+        "STABLE",
+        "BORDERLINE"
+      ],
+      "title": "Stability",
+      "type": "string"
+    },
+    "thresholds": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Thresholds",
+      "type": "object"
+    },
+    "verdict": {
+      "enum": [
+        "GO",
+        "PIVOT",
+        "NO-GO",
+        "INSUFFICIENT_EVIDENCE"
+      ],
+      "title": "Verdict",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "integer"
+    },
+    "versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Versions",
+      "type": "object"
+    },
+    "weakest_dimension": {
+      "anyOf": [
+        {
+          "enum": [
+            "demand_pain",
+            "competition",
+            "differentiation",
+            "feasibility",
+            "risk",
+            "learning"
+          ],
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Weakest Dimension"
+    },
+    "weights": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "propertyNames": {
+        "enum": [
+          "demand_pain",
+          "competition",
+          "differentiation",
+          "feasibility",
+          "risk",
+          "learning"
+        ]
+      },
+      "title": "Weights",
+      "type": "object"
+    },
+    "what_would_make_go": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/WhatIfOption"
+      },
+      "title": "What Would Make Go",
+      "type": "array"
+    }
+  },
+  "required": [
+    "idea_id",
+    "version",
+    "run_id",
+    "verdict",
+    "stability",
+    "score",
+    "confidence",
+    "gates",
+    "weights",
+    "thresholds",
+    "scores",
+    "weakest_dimension",
+    "sensitivity",
+    "versions"
+  ],
+  "title": "Verdict",
+  "type": "object"
+}

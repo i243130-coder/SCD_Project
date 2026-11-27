@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-urls
+  namespace: idea-validator
+data:
+  GATEWAY_URL: http://gateway:8000
+  PROFILE_URL: http://profile:8000
+  ORCHESTRATOR_URL: http://orchestrator:8000
+  TOOLS_URL: http://tools:8000
+  KB_URL: http://kb:8000
+  ANALYST_URL: http://analyst:8000
+  IDEATION_URL: http://ideation:8000
+  VALIDATORS_URL: http://validators:8000
+  SCORER_URL: http://scorer:8000
+  VERDICT_URL: http://verdict:8000
+  CRITIC_URL: http://critic:8000
+  AGENTOPS_URL: http://agentops:8000
+  REDIS_URL: redis://redis:6379/0
+  QDRANT_URL: http://qdrant:6333
+  POSTGRES_HOST: postgres
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: common-config
+  namespace: idea-validator
+data:
+  ENV: test
+  LOG_LEVEL: INFO
+  LLM_MODE: live
+  POSTGRES_DB: ideas
+  POSTGRES_USER: ideas
+  POSTGRES_PORT: '5432'
+  KB_SNAPSHOT: /data/snapshot/cards.jsonl.gz
+  TRACE_DIR: /traces
+  DRIFT_DIR: /traces/drift
+  UI_ORIGIN: ''
+  BUDGET_MAX_PAGES: '30'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tools-allowlist
+  namespace: idea-validator
+data:
+  ALLOWED_DOMAINS: hacker-news.firebaseio.com,hn.algolia.com,api.github.com,api.producthunt.com,www.ycombinator.com,oauth.reddit.com,www.reddit.com

@@ -1,0 +1,59 @@
+{
+  "properties": {
+    "card_id": {
+      "title": "Card Id",
+      "type": "string"
+    },
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Published At"
+    },
+    "quote": {
+      "title": "Quote",
+      "type": "string"
+    },
+    "retrieved_at": {
+      "format": "date-time",
+      "title": "Retrieved At",
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "hackernews",
+        "github",
+        "producthunt",
+        "yc",
+        "reddit"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "url": {
+      "title": "Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "card_id",
+    "quote",
+    "source",
+    "url",
+    "retrieved_at"
+  ],
+  "title": "EvidenceItem",
+  "type": "object"
+}

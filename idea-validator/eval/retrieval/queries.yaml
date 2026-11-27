@@ -1,0 +1,31 @@
+# Retrieval evaluation queries (R-M6). >= 20 required.
+# status: proposed = drafted by the AI agent against the SYNTHETIC CI fixture; TODO(human): review each query and
+# its relevant ids, set status: confirmed and reviewed_by. Once the real KB exists, humans write queries against
+# real card ids in queries_real.yaml (same format) and the report uses those numbers.
+fixture: eval/retrieval/fixtures/cards.jsonl
+queries:
+  - {q: "tool to manage university club events", relevant: [card_fx000, card_fx002, card_fx003], status: proposed}
+  - {q: "ClubHub", relevant: [card_fx000], status: proposed}
+  - {q: "RSVP page with email reminders", relevant: [card_fx001], status: proposed}
+  - {q: "student society event sign-ups across WhatsApp and Google Forms", relevant: [card_fx002, card_fx000], status: proposed}
+  - {q: "ticketing platform for large events", relevant: [card_fx004], status: proposed}
+  - {q: "reduce food waste by tracking expiry dates", relevant: [card_fx005, card_fx007], status: proposed}
+  - {q: "what to cook with leftovers before they spoil", relevant: [card_fx006, card_fx005], status: proposed}
+  - {q: "fridge barcode scanner with alerts", relevant: [card_fx007], status: proposed}
+  - {q: "surplus restaurant food marketplace", relevant: [card_fx008], status: proposed}
+  - {q: "freelancers chasing late invoice payments", relevant: [card_fx010, card_fx011, card_fx009], status: proposed}
+  - {q: "open source invoicing and time tracking", relevant: [card_fx009], status: proposed}
+  - {q: "quarterly tax estimates for gig workers", relevant: [card_fx012], status: proposed}
+  - {q: "turn lecture slides into practice quizzes", relevant: [card_fx015, card_fx014], status: proposed}
+  - {q: "spaced repetition flashcards from PDFs", relevant: [card_fx014, card_fx016], status: proposed}
+  - {q: "find study partners in the same course", relevant: [card_fx013], status: proposed}
+  - {q: "clinic no-shows appointment SMS reminders", relevant: [card_fx018, card_fx017], status: proposed}
+  - {q: "electronic health records for small practices", relevant: [card_fx019], status: proposed}
+  - {q: "detect and quarantine flaky CI tests", relevant: [card_fx022, card_fx021], status: proposed}
+  - {q: "automated pull request review comments", relevant: [card_fx020], status: proposed}
+  - {q: "fair chore rotation for roommates", relevant: [card_fx024, card_fx025], status: proposed}
+  - {q: "house plant watering reminders", relevant: [card_fx023], status: proposed}
+  - {q: "track internship applications and follow-ups", relevant: [card_fx029], status: proposed}
+  - {q: "crypto trading signals bot", relevant: [card_fx026, card_fx027], status: proposed}
+  - {q: "tailor resume to a job description", relevant: [card_fx028], status: proposed}
+  - {q: "open source projects", relevant: [card_fx003, card_fx009], filters: {source: [github]}, status: proposed}

@@ -1,0 +1,20 @@
+{
+  "properties": {
+    "text": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "title": {
+      "default": "",
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "title": "IdeaInput",
+  "type": "object"
+}

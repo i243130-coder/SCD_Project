@@ -1,0 +1,53 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../../base
+images:
+- name: registry/gateway
+  newName: localhost:5001/gateway
+  newTag: dev
+- name: registry/profile
+  newName: localhost:5001/profile
+  newTag: dev
+- name: registry/orchestrator
+  newName: localhost:5001/orchestrator
+  newTag: dev
+- name: registry/tools
+  newName: localhost:5001/tools
+  newTag: dev
+- name: registry/kb
+  newName: localhost:5001/kb
+  newTag: dev
+- name: registry/analyst
+  newName: localhost:5001/analyst
+  newTag: dev
+- name: registry/ideation
+  newName: localhost:5001/ideation
+  newTag: dev
+- name: registry/validators
+  newName: localhost:5001/validators
+  newTag: dev
+- name: registry/scorer
+  newName: localhost:5001/scorer
+  newTag: dev
+- name: registry/verdict
+  newName: localhost:5001/verdict
+  newTag: dev
+- name: registry/critic
+  newName: localhost:5001/critic
+  newTag: dev
+- name: registry/agentops
+  newName: localhost:5001/agentops
+  newTag: dev
+- name: registry/ui
+  newName: localhost:5001/ui
+  newTag: dev
+- name: registry/scouts
+  newName: localhost:5001/scouts
+  newTag: dev
+- name: registry/ingestion
+  newName: localhost:5001/ingestion
+  newTag: dev
+- name: registry/evaluation
+  newName: localhost:5001/evaluation
+  newTag: dev

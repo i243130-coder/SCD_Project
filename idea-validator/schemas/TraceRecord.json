@@ -1,0 +1,127 @@
+{
+  "properties": {
+    "agent": {
+      "title": "Agent",
+      "type": "string"
+    },
+    "cache_hit": {
+      "default": false,
+      "title": "Cache Hit",
+      "type": "boolean"
+    },
+    "cost_usd": {
+      "default": 0.0,
+      "title": "Cost Usd",
+      "type": "number"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    },
+    "input": {
+      "title": "Input",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "tool_call",
+        "llm_call",
+        "decision"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "latency_ms": {
+      "default": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "output": {
+      "title": "Output",
+      "type": "string"
+    },
+    "parent_step": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Parent Step"
+    },
+    "retries": {
+      "default": 0,
+      "title": "Retries",
+      "type": "integer"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "step_id": {
+      "title": "Step Id",
+      "type": "integer"
+    },
+    "tokens_in": {
+      "default": 0,
+      "title": "Tokens In",
+      "type": "integer"
+    },
+    "tokens_out": {
+      "default": 0,
+      "title": "Tokens Out",
+      "type": "integer"
+    },
+    "tool": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool"
+    },
+    "ts": {
+      "format": "date-time",
+      "title": "Ts",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "step_id",
+    "parent_step",
+    "agent",
+    "kind",
+    "input",
+    "output",
+    "ts"
+  ],
+  "title": "TraceRecord",
+  "type": "object"
+}

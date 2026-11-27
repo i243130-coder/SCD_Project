@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "text": {
+      "title": "Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "text",
+    "evidence_ids"
+  ],
+  "title": "Claim",
+  "type": "object"
+}

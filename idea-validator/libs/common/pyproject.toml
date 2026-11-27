@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ivcommon"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.7", "pydantic-settings>=2.3", "httpx>=0.27", "tenacity>=8.2", "PyYAML>=6", "fastapi>=0.110", "prometheus-client>=0.20"]
+
+[tool.setuptools.packages.find]
+include = ["ivcommon*"]

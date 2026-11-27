@@ -1,0 +1,75 @@
+{
+  "properties": {
+    "compute": {
+      "enum": [
+        "laptop",
+        "free_gpu",
+        "paid"
+      ],
+      "title": "Compute",
+      "type": "string"
+    },
+    "goal": {
+      "enum": [
+        "startup",
+        "portfolio",
+        "course_project"
+      ],
+      "title": "Goal",
+      "type": "string"
+    },
+    "hours_per_week": {
+      "maximum": 80,
+      "minimum": 0,
+      "title": "Hours Per Week",
+      "type": "number"
+    },
+    "interests": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Interests",
+      "type": "array"
+    },
+    "profile_version": {
+      "default": 1,
+      "title": "Profile Version",
+      "type": "integer"
+    },
+    "skills": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Skills",
+      "type": "array"
+    },
+    "team_size": {
+      "maximum": 6,
+      "minimum": 1,
+      "title": "Team Size",
+      "type": "integer"
+    },
+    "user_id": {
+      "title": "User Id",
+      "type": "string"
+    },
+    "weeks_available": {
+      "maximum": 52,
+      "minimum": 1,
+      "title": "Weeks Available",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "user_id",
+    "skills",
+    "hours_per_week",
+    "weeks_available",
+    "team_size",
+    "compute",
+    "goal"
+  ],
+  "title": "StudentProfile",
+  "type": "object"
+}

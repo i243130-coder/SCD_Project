@@ -1,0 +1,17 @@
+# Human-labelled tuning set (§22). >= 40 ideas recommended. TODO(human): BOTH members label independently,
+# resolve differences, record labelled_by + disagreement notes. The agent must NOT fill human_verdict.
+# These ideas are only for tuning/measuring; jobs/finetune/build_dataset.py excludes them (tested).
+# Helper: python eval/labelled/label_helper.py  (interactive, fills human_verdict for you)
+ideas:
+  - id: lab_001
+    idea: "RSVP and attendance tool for university robotics societies, web only"
+    profile: {skills: [python, react], hours_per_week: 10, weeks_available: 12, team_size: 2, compute: laptop, goal: portfolio, interests: [web]}
+    human_verdict: null          # GO | PIVOT | NO-GO | INSUFFICIENT_EVIDENCE
+    labelled_by: []
+    notes: ""
+  - id: lab_002
+    idea: "General-purpose ticketing platform to compete with Eventbrite worldwide"
+    profile: {skills: [python], hours_per_week: 5, weeks_available: 10, team_size: 1, compute: laptop, goal: startup, interests: []}
+    human_verdict: null
+    labelled_by: []
+    notes: ""

@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: idea-validator
+spec:
+  podSelector: &id001
+    matchExpressions:
+    - key: tier
+      operator: NotIn
+      values:
+      - ui
+  policyTypes:
+  - Egress
+  - Ingress
+  egress:
+  - to:
+    - podSelector: *id001
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          tier: internal
+    - podSelector:
+        matchLabels:
+          tier: edge
+    - podSelector:
+        matchLabels:
+          tier: data

@@ -1,0 +1,13 @@
+# Per-run budgets (R-M13 / §15). Enforced in M3 (BudgetGuard) and M5 (pages).
+runs:
+  validate:  {max_tokens: 80000, max_pages: 30, max_steps: 120, max_cost_usd: 0.05}
+  discover:  {max_tokens: 200000, max_pages: 60, max_steps: 400, max_cost_usd: 0.20}
+  whatif:    {max_tokens: 40000, max_pages: 10, max_steps: 60, max_cost_usd: 0.02}
+  challenge: {max_tokens: 20000, max_pages: 5, max_steps: 30, max_cost_usd: 0.01}
+estimates:          # rough cost estimates used before an action (USD)
+  deep_search: 0.03
+  validate_one: 0.01
+  scorer_call: 0.002
+approval:
+  ask_when: "spent + estimate > budget"
+  message: "This step will cost about ${estimate:.3f} (spent ${spent:.3f} of ${budget:.3f}). Approve?"
